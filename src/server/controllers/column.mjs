@@ -98,17 +98,15 @@ column.put("/:columnId/card/:cardId", async (req, res, next) => {
       return res.status(404).json({ message: "column doesn't exist" });
 
     await prisma.card.update({
-      where: { id: Number(req.body.currentId) },
+      where: { id: Number(req.body.cardId) },
       data: { ordering: Number(req.body.newOrdering), columnId: req.body.newColumn },
     });
     await prisma.card.updateMany({
-      where: { ordering: { gt: req.body.newOrdering } },
+      where: {
+        ordering: { gte: req.body.newOrdering }, columnId: Number(req.params.columnId), AND: { NOT: { id: Number(req.body.cardId) } }
+      },
       data: { ordering: { increment: 1 } }
     });
-    // await prisma.card.update({
-    //   where: { id: Number(req.body.newId) },
-    //   data: { ordering: Number(req.body.currentOrdering) },
-    // });
   } catch (e) {
     console.error(e);
     return res.status(500).json({ message: "Oops, something witn wrong!" });

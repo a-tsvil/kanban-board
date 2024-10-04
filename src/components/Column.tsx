@@ -7,29 +7,33 @@ import { useDrop } from "react-dnd";
 
 function Column({ id, title, cards, default: defaultColumn }) {
   const [createCaseOpen, setCrateCaseOpen] = useState(false);
-  const [{ canDrop, isOver }, drop] = useDrop(() => ({
-    accept: "card",
-    drop: (item, monitor) => {
-      const dropResult = monitor.getDropResult();
-      const targetCardId = dropResult
-        ? dropResult.cardId
-        : cards && cards.length > 0
-          ? cards[cards.length - 1].id
+  const [{ canDrop, isOver }, drop] = useDrop(
+    () => ({
+      accept: "card",
+      drop: (item, monitor) => {
+        console.log("column");
+        const dropResult = monitor.getDropResult();
+        const targetCardId = dropResult
+          ? dropResult.cardId
+          : cards && cards.length > 0
+          cards[cards.length - 1].id
           : null;
-      const ordering = dropResult && dropResult.ordering;
-      return {
-        targetCardId,
-        ordering,
-        columnId: id,
-        lastOrdering:
-          cards && cards.length > 0 ? cards[cards.length - 1].ordering : 0,
-      };
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
+        console.log(dropResult);
+        console.log(cards);
+        return {
+          targetCardId,
+          columnId: id,
+          lastOrdering:
+            cards && cards.length > 0 ? cards[cards.length - 1].ordering : 0,
+        };
+      },
+      collect: (monitor) => ({
+        isOver: monitor.isOver(),
+        canDrop: monitor.canDrop(),
+      }),
     }),
-  }));
+    [cards]
+  );
 
   return (
     <div ref={drop} className="column">

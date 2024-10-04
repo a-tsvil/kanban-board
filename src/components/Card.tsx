@@ -23,7 +23,6 @@ function Card({ id, title, progress, ordering, updatedAt, columnId }) {
     },
     onSuccess: () => {
       // Invalidate and refetch
-      console.log("success");
       queryClient.invalidateQueries({ queryKey: ["columns"] });
     },
   });
@@ -36,8 +35,8 @@ function Card({ id, title, progress, ordering, updatedAt, columnId }) {
         targetCardId: number;
         columnId: number;
         lastOrdering: number;
-        ordering: number;
       } | null = monitor.getDropResult();
+      console.log("card");
       console.log(dropResult);
       console.log(id, ordering);
       if (!dropResult) {
@@ -49,17 +48,9 @@ function Card({ id, title, progress, ordering, updatedAt, columnId }) {
       if (dropResult.columnId !== null && dropResult.columnId < columnId) {
         return;
       }
-      let newOrdering;
-      if (dropResult.ordering === null) {
-        newOrdering = dropResult.lastOrdering + 1;
-      } else {
-        newOrdering = dropResult.ordering;
-      }
       mutation.mutate({
-        currentId: id,
-        currentOrdering: ordering,
-        newId: dropResult.targetCardId,
-        newOrdering,
+        cardId: id,
+        newOrdering: dropResult.lastOrdering + 1,
         newColumn: dropResult.columnId,
       });
     },
@@ -71,7 +62,7 @@ function Card({ id, title, progress, ordering, updatedAt, columnId }) {
 
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: "card",
-    drop: () => ({ cardId: id, ordering }),
+    drop: () => ({ cardId: id, targetCardOrdering: ordering }),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
