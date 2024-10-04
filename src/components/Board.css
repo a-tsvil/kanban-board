@@ -1,0 +1,19 @@
+.board {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns {
+  display: flex;
+  flex-direction: row;
+}
+
+.add-column-btn {
+  background-color: #f2f2f2;
+  font-size: 25px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-right: 20px;
+}
