@@ -2,9 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 
 import "./Board.css";
 import Column from "./Column";
+import { Column as ColumnData } from "@prisma/client";
 
 function Board() {
-  const { isPending, error, data, isFetching } = useQuery({
+  const { isPending, error, data, isFetching } = useQuery<ColumnData[]>({
     queryKey: ["columns"],
     queryFn: async () => {
       const response = await fetch("http://localhost:8000/api/column");

@@ -4,9 +4,28 @@ import Card from "./Card.tsx";
 import "./Column.css";
 import CreateCard from "./CreateCard.tsx";
 import { useDrop } from "react-dnd";
+import { useQuery } from "@tanstack/react-query";
+import { Card as CardData } from "@prisma/client";
 
-function Column({ id, title, cards, default: defaultColumn }) {
+type ColumnProps = {
+  id: number;
+  title: string;
+  default: boolean;
+};
+
+function Column({ id, title, default: defaultColumn }: ColumnProps) {
+  const columnQueryKey = `column-${id}`;
+
   const [createCaseOpen, setCrateCaseOpen] = useState(false);
+
+  const { isPending, error, data, isFetching } = useQuery<CardData>({
+    queryKey: [columnQueryKey],
+    queryFn: async () => {
+      const response = await fetch("http://localhost:8000/api/column");
+      return await response.json();
+    },
+  });
+
   const [{ canDrop, isOver }, drop] = useDrop(
     () => ({
       accept: "card",

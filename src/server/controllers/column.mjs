@@ -8,11 +8,6 @@ const prisma = new PrismaClient();
 
 column.get("/", async (_, res, next) => {
   const columns = await prisma.column.findMany({
-    include: {
-      cards: {
-        orderBy: { ordering: 'asc' }
-      }
-    },
     orderBy: [{ default: 'desc' }, { id: 'asc' }],
   });
   res.status(200).json(columns);
