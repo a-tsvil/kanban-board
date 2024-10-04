@@ -32,9 +32,17 @@ function Card({ id, title, progress, ordering, updatedAt, columnId }) {
     type: "card",
     item: { title, cardId: id },
     end: (item, monitor) => {
-      const dropResult = monitor.getDropResult();
+      const dropResult: {
+        targetCardId: number;
+        columnId: number;
+        lastOrdering: number;
+        ordering: number;
+      } | null = monitor.getDropResult();
       console.log(dropResult);
       console.log(id, ordering);
+      if (!dropResult) {
+        return;
+      }
       if (dropResult.targetCardId !== null && dropResult.targetCardId === id) {
         return;
       }

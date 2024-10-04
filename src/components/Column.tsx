@@ -11,13 +11,18 @@ function Column({ id, title, cards, default: defaultColumn }) {
     accept: "card",
     drop: (item, monitor) => {
       const dropResult = monitor.getDropResult();
-      const targetCardId = dropResult ? dropResult.cardId : cards[cards.length - 1].id;
+      const targetCardId = dropResult
+        ? dropResult.cardId
+        : cards && cards.length > 0
+          ? cards[cards.length - 1].id
+          : null;
       const ordering = dropResult && dropResult.ordering;
       return {
         targetCardId,
         ordering,
         columnId: id,
-        lastOrdering: cards[cards.length - 1].ordering,
+        lastOrdering:
+          cards && cards.length > 0 ? cards[cards.length - 1].ordering : 0,
       };
     },
     collect: (monitor) => ({

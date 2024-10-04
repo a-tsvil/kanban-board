@@ -101,10 +101,14 @@ column.put("/:columnId/card/:cardId", async (req, res, next) => {
       where: { id: Number(req.body.currentId) },
       data: { ordering: Number(req.body.newOrdering), columnId: req.body.newColumn },
     });
-    await prisma.card.update({
-      where: { id: Number(req.body.newId) },
-      data: { ordering: Number(req.body.currentOrdering) },
+    await prisma.card.updateMany({
+      where: { ordering: { gt: req.body.newOrdering } },
+      data: { ordering: { increment: 1 } }
     });
+    // await prisma.card.update({
+    //   where: { id: Number(req.body.newId) },
+    //   data: { ordering: Number(req.body.currentOrdering) },
+    // });
   } catch (e) {
     console.error(e);
     return res.status(500).json({ message: "Oops, something witn wrong!" });
