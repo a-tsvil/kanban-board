@@ -16,7 +16,7 @@ function Column({ id, title, cards, default: defaultColumn }) {
         const targetCardId = dropResult
           ? dropResult.cardId
           : cards && cards.length > 0
-          cards[cards.length - 1].id
+          ? cards[cards.length - 1].id
           : null;
         console.log(dropResult);
         console.log(cards);
