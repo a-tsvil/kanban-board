@@ -7,8 +7,6 @@ import card from "./controllers/card.mjs";
 
 const app = express();
 
-console.log(process.env);
-
 app.use(cors());
 app.use(bodyParser.json());
 

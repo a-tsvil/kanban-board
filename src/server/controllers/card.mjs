@@ -66,4 +66,56 @@ card.delete("/:cardId", async (req, res, next) => {
   next();
 });
 
+card.put("/:cardId", async (req, res, next) => {
+  if (req.body.newOrdering !== 0 && !req.body.newOrdering)
+    return res.status(400).json({ message: "newOrdering is missing" });
+  if (req.body.targetColumnId !== 0 && !req.body.targetColumnId)
+    return res.status(400).json({ message: "targetColumnId is missing" });
+
+  const newOrdering = Number(req.body.newOrdering);
+  const targetColumnId = Number(req.body.targetColumnId);
+  const cardId = Number(req.params.cardId);
+
+  if (Number.isNaN(newOrdering))
+    return res
+      .status(400)
+      .json({ message: "newOrdering value must be a number" });
+  if (Number.isNaN(targetColumnId))
+    return res
+      .status(400)
+      .json({ message: "targetColumnId value must be a number" });
+  if (Number.isNaN(cardId))
+    return res.status(400).json({ message: "cardId value must be a number" });
+
+  try {
+    const column = await prisma.column.findUnique({
+      where: { id: targetColumnId },
+    });
+    if (!column)
+      return res.status(404).json({ message: "column doesn't exist" });
+
+    await prisma.card.update({
+      where: { id: cardId },
+      data: {
+        ordering: newOrdering,
+        columnId: targetColumnId,
+      },
+    });
+    await prisma.card.updateMany({
+      where: {
+        ordering: { gte: newOrdering },
+        columnId: targetColumnId,
+        AND: { NOT: { id: cardId } },
+      },
+      data: { ordering: { increment: 1 } },
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ message: "Oops, something witn wrong!" });
+  }
+
+  res.status(200).json({ message: "Added" });
+  next();
+});
+
 export default card;

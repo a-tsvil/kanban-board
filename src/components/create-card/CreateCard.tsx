@@ -1,13 +1,29 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  DefaultError,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import "./CreateCard.css";
 import { useState } from "react";
+import Check from "../icons/Check";
+import Cancel from "../icons/Cancel";
 
-function CreateCard({ onCancel }) {
+type Props = {
+  columnId: number;
+  onCancel: () => void;
+};
+
+type CardData = {
+  title: string;
+};
+
+function CreateCard({ columnId, onCancel }: Props) {
+  const [title, setTitle] = useState<string>();
+
   const queryClient = useQueryClient();
+  const columnQueryKey = `column-${columnId}`;
 
-  const [title, setTitle] = useState();
-
-  const mutation = useMutation({
+  const mutation = useMutation<void, DefaultError, CardData>({
     mutationFn: async (data) => {
       const response = await fetch("http://localhost:8000/api/card", {
         method: "POST",
@@ -19,8 +35,8 @@ function CreateCard({ onCancel }) {
       return await response.json();
     },
     onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["columns"] });
+      console.log(columnQueryKey);
+      queryClient.invalidateQueries({ queryKey: [columnQueryKey] });
       onCancel();
     },
   });
@@ -35,16 +51,17 @@ function CreateCard({ onCancel }) {
         <div>
           <button
             onClick={() => {
+              if (!title) return;
               mutation.mutate({
                 title,
               });
             }}
             className="create-case-btn"
           >
-            +
+            <Check />
           </button>
           <button onClick={() => onCancel()} className="create-case-btn">
-            -
+            <Cancel />
           </button>
         </div>
       </div>

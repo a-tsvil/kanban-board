@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "local": "docker compose up",
+    "local": "docker compose up --no-attach postgres",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",

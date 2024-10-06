@@ -1,5 +1,6 @@
 .create-card-layout {
-  padding-top: 5px;
+  padding-top: 15px;
+  padding-bottom: 8px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -8,5 +9,8 @@
 
 .create-case-btn {
   margin-right: 5px;
-  font-size: 18;
+  outline: none;
+  border: none;
+  background-color: unset;
+  padding-left: 10px;
 }
