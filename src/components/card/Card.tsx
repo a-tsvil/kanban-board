@@ -13,15 +13,20 @@ type Props = {
 };
 
 function Card({ id, title, progress, ordering, updatedAt, columnId }: Props) {
-  const attachRef = useDragAndDrop(id, ordering, columnId);
+  const [attachRef, isOverCard] = useDragAndDrop(id, ordering, columnId);
 
   return (
     <div ref={attachRef} className="card-wrapper">
-      <div className="card">
+      <div
+        className="card"
+        style={{
+          borderBottom: isOverCard ? "3px solid #42555a" : "1px solid #e1e1e1",
+        }}
+      >
         <div>
           <h3 className="card-title">{title}</h3>
           <div>
-            {progress} id:{id} order:{ordering}
+            <progress className="card-progress" value={progress} max={100} />
           </div>
           <div className="card-updated-at">
             Updated {moment(updatedAt).startOf("hour").fromNow()}

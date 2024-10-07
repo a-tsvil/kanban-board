@@ -62,10 +62,6 @@ function Column({ id, default: defaultColumn }: ColumnProps) {
           newOrdering,
         };
       },
-      collect: (monitor) => ({
-        isOver: monitor.isOver(),
-        canDrop: monitor.canDrop(),
-      }),
     }),
     [cards]
   );

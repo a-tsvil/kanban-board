@@ -66,22 +66,19 @@ function useDragAndDrop(id: number, ordering: number, columnId: number) {
           targetColumnId: dropResult.columnId,
         });
       },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-        handlerId: monitor.getHandlerId(),
-      }),
     }),
     [id, ordering]
   );
 
-  const [, drop] = useDrop(
+  const [{ isOverCard }, drop] = useDrop(
     () => ({
       accept: "card",
       drop: () => ({ cardId: id, targetCardOrdering: ordering }),
-      collect: (monitor) => ({
-        isOver: monitor.isOver(),
-        canDrop: monitor.canDrop(),
-      }),
+      collect: (monitor) => {
+        return {
+          isOverCard: monitor.isOver(),
+        };
+      },
     }),
     [id, ordering]
   );
@@ -91,7 +88,7 @@ function useDragAndDrop(id: number, ordering: number, columnId: number) {
     drop(el);
   }
 
-  return attachRef;
+  return [attachRef, isOverCard];
 }
 
 export default useDragAndDrop;
